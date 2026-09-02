@@ -1,103 +1,57 @@
-# EP 1.2 — Usuarios objetivo y proto-personas
+# EP 1.1 - Diseño y Estructura Inicial
 
 **FocalWare** · Priorización de limpieza por riesgo de incendio en las quebradas de Valparaíso
 
 [← Volver al README](../README.md)
+[← Volver a EP 1.2](EP1.2-usuarios-y-protopersonas.md)
 
 ---
 
-> **Para el equipo:** cada bloque **Por completar** dice qué falta en esa sección. Escribe tu nombre en *asignado a*, completa la sección y **borra el bloque** al terminar. Commitea tu parte desde tu propia cuenta.
+## 1.1 Requerimientos del Sistema
+
+El presente apartado detalla la especificación formal de requisitos del sistema FocalWare, estableciendo tanto las capacidades funcionales esperadas por los diferentes perfiles de usuario como las directrices de rendimiento, seguridad y accesibilidad que sustentan su despliegue.
+
+La columna Usuario indica el perfil que ejecuta el requerimiento. Cuando corresponde a **Sistema**, la acción se dispara de forma automática sin intervención directa de un usuario.
+
+> **1.1.1 Requerimientos Funcionales**
+
+| ID | Nombre | Requerimiento | Tipo | Dependencias con otro Requerimiento | Usuario |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **RF-01** | Registro de reporte georreferenciado | El sistema debe permitir al vecino crear un reporte con ubicación GPS, fotografías, categoría de residuo, volumen estimado y descripción. | Transaccional | Ninguna | Vecino |
+| **RF-02** | Almacenamiento local offline | El sistema debe permitir guardar localmente los reportes creados sin conexión a internet y enviarlos automáticamente al servidor cuando se restablezca la conectividad, sin generar duplicados. | Transaccional | RF-01 | Vecino / Sistema |
+| **RF-03** | Visualización en mapa interactivo | El sistema debe desplegar un mapa interactivo con localizaciones asociadas a los reportes existentes en el sistema. | Interfaces externas | RF-01 | Vecino / Funcionario |
+| **RF-04** | Filtrado del mapa interactivo | El sistema debe permitir filtrar el mapa interactivo por estado, categoría, riesgo, sector y fecha. | Requisito de búsqueda y reportes | RF-03 | Vecino / Funcionario |
+| **RF-05** | Cálculo de índice ponderado | El sistema debe calcular un índice ponderado según categoría, volumen, apoyos recibidos, reportes cercanos, antigüedad y condiciones meteorológicas externas. | Algoritmo | RF-01, RF-11 | Sistema |
+| **RF-06** | Aplicación del índice ponderado | El sistema utilizará el índice ponderado para priorizar la cola de atención municipal de los reportes recibidos. | Regla de negocio | RF-05 | Sistema |
+| **RF-07** | Gestión municipal de incidentes | El sistema debe permitir a los funcionarios ver la cola priorizada, asignar cuadrilla, programar atención, cambiar estado y adjuntar evidencia de cierre. El rechazo de un reporte requiere motivo obligatorio. | Niveles de autorización | RF-06 | Funcionario |
+| **RF-08** | Notificación y trazabilidad de reportes | El sistema debe notificar al autor de cada reporte los cambios de estado realizados y exponer el historial completo de transiciones con fecha, estado y responsable. | Auditoría | RF-07 | Sistema |
+| **RF-09** | Panel y métricas de reportes | El sistema debe mostrar reportes por estado y categoría, tiempo promedio de resolución por sector y evolución mensual, permitiendo exportar el conjunto filtrado en formato CSV. | Requisito de búsqueda y reportes | RF-07 | Funcionario |
+| **RF-10** | Identificación de puntos críticos recurrentes | El sistema debe marcar las ubicaciones con un número configurable de reportes cerrados dentro de una ventana temporal configurable. | Regla de negocio | RF-01, RF-07 | Sistema |
+| **RF-11** | Validación de duplicados y orden de prioridad | El sistema deberá validar que los reportes subidos por los usuarios no se encuentren ya en existencia en la base de datos dentro de un radio configurable. Si existe, enviará el mensaje "Ya existe un antecedente previo de este reporte" al usuario, incorporando un sistema de apoyos que incide en el orden de prioridad. | Integridad de los datos | RF-01, RF-02 | Sistema / Vecino |
 
 ---
 
-> **Nota metodológica.** Durante esta etapa del proyecto no se realizó contacto directo con usuarios. La caracterización que sigue corresponde a una **aproximación preliminar** elaborada mediante investigación documental: fuentes académicas, informes públicos, estadísticas, sitios institucionales, normativa y análisis de soluciones existentes. Las proto-personas presentadas **no representan usuarios reales**, sino perfiles hipotéticos construidos a partir de esas fuentes secundarias y de supuestos razonados, los cuales se declaran explícitamente en la sección 9.
+> **1.1.2 Requerimientos No Funcionales**
+
+| ID | Nombre | Requerimiento | Tipo | Dependencias | Usuario |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **RNF-01** | Límite de pasos de reporte | El usuario deberá crear un reporte en máximo 3 pasos y en menos de 60 segundos en condiciones normales de operación. | Usabilidad | RF-01 | Vecino |
+| **RNF-02** | Dimensiones mínimas y accesibilidad | El sistema debe tener controles de al menos 44x44 px y texto base de 16 px respetando las normas de WCAG 2.1 Nivel AA. | Accesibilidad | Ninguna | Vecino / Funcionario |
+| **RNF-03** | Disponibilidad sin conexión | El sistema deberá permanecer operativo para la creación de reportes en ausencia de conectividad a internet, garantizando que no se pierdan datos ante el cierre de la aplicación. | Disponibilidad / Integridad de los datos | RF-02 | Vecino |
+| **RNF-04** | Cifrado de credenciales | El sistema debe realizar bcrypt con mínimo 10 rondas. | Seguridad | Ninguna | Sistema |
+| **RNF-05** | Expiración y rotación de tokens | El sistema debe aplicar JWT con expiración de 15 minutos, algoritmo asimétrico y mecanismo de rotación. | Seguridad | Ninguna | Sistema |
+| **RNF-06** | Restricción CORS | La API del sistema debe restringir el intercambio de recursos de origen cruzado (CORS) mediante una lista blanca (allowlist) explícita de dominios autorizados, denegando el uso de comodines (*) en endpoints autenticados y restringiendo los métodos y cabeceras HTTP a los estrictamente necesarios. | Seguridad | Ninguna | Sistema |
+| **RNF-07** | Disociación y anonimización | El sistema debe asegurar que la generación y publicación de reportes de acceso público garantice la disociación total de la identidad de los autores, impidiendo su reidentificación directa o indirecta, en conformidad con la Ley N° 19.628, el Decreto Supremo N° 779 (2000) del Ministerio de Justicia y la norma técnica establecida en el Decreto Supremo N° 1 (2015) del Ministerio Secretaría General de la Presidencia. | Privacidad | RF-01, RF-03 | Vecino |
+| **RNF-08** | Tiempo de respuesta de la API | Los endpoints del sistema deben responder en menos de 500 ms en el percentil 95 con una base de al menos 5.000 reportes registrados, aplicando paginación e índices sobre los campos de estado, coordenadas y fecha de creación. | Rendimiento | RF-04, RF-09 | Sistema |
+| **RNF-09** | Compatibilidad móvil | El sistema debe ser compatible con Android 9 o superior, iOS 14 o superior. | Portabilidad | Ninguna | Vecino |
+| **RNF-10** | Compatibilidad web | El sistema debe ser compatible con navegadores web Google Chrome, Mozilla Firefox, Microsoft Edge y Safari en sus versiones actuales y anteriores (N-2). | Portabilidad | Ninguna | Funcionario |
+| **RNF-11** | Contenerización y despliegue | La arquitectura del sistema debe estar completamente contenerizada, requiriendo únicamente Docker y Docker Compose para su despliegue y desacoplando la configuración del código fuente mediante variables de entorno. | Arquitectónico | Ninguna | Sistema |
+| **RNF-12** | Rendimiento de renderizado cartográfico | El mapa interactivo debe renderizar hasta 1.000 marcadores en menos de 2 segundos mediante agrupación en cliente, y las imágenes deben comprimirse a un máximo de 300 KB antes de su transmisión. | Rendimiento | RF-03 | Vecino / Funcionario |
 
 ---
 
-## 1. Alcance y método
+## Notas de la especificación
 
-El objetivo de este documento es caracterizar a quienes usarían FocalWare antes de tener acceso a usuarios reales, de modo que las decisiones de diseño e implementación puedan justificarse en algo más que en intuición del equipo.
+**Requerimientos excluidos.** El inicio de sesión y el registro de usuarios no se contabilizan como requerimientos funcionales, ya que corresponden a funcionalidades transversales de soporte y no a capacidades propias del problema abordado.
 
-El procedimiento seguido fue:
-
-1. Delimitar el problema y su contexto territorial (desarrollado en el README, sección *Problema que aborda*).
-2. Identificar los grupos de personas afectadas por ese problema y los que intervienen en su resolución.
-3. Revisar fuentes secundarias para describir sus características, necesidades y limitaciones.
-4. Traducir esa revisión en dos proto-personas, una por cada rol del sistema.
-5. Declarar los supuestos utilizados, para que puedan validarse o corregirse más adelante.
-
-> **Por completar - asignado a: -------**
-> Agregar un párrafo sobre las **soluciones existentes** que se revisaron (SOSAFE, sistemas de reclamos municipales, apps de reporte de microbasurales). Qué se tomó de ellas y qué se descartó.
-
-## 2. Grupos de usuarios identificados
-
-> **Por completar - asignado a: -------**
-> Definir los dos grupos de usuarios a los que apunta la aplicación y qué los diferencia.
-
-### 2.1 Habitantes de los cerros y quebradas de Valparaíso
-
-> **Por completar - asignado a: -------**
-> Describir **características generales · necesidades · posibles dificultades** del grupo. Citar al menos una fuente.
-
-### 2.2 Funcionarios municipales a cargo de la gestión de residuos y emergencias
-
-> **Por completar - asignado a: -------**
-> Ídem: características, necesidades y dificultades del grupo, con fuente.
-
-## 3. Contexto de uso
-
-> **Por completar - asignado a: -------**
-> Dónde y en qué situación usaría el sistema cada grupo: lugar, tiempo disponible, calidad de señal, dispositivo.
-> El contraste entre ambos contextos es lo que justifica el RNF-05 (móvil vs. escritorio).
-
-## 4. Objetivos y tareas dentro del sistema
-
-> **Por completar - asignado a: -------**
-> Listar las tareas de cada grupo **vinculando cada una a un RF**. Formato: *"Reportar un microbasural en su cuadra (RF-01)"*.
-> Vecino/a: RF-01, 02, 03, 05, 07 · Funcionario: RF-03, 06, 08, 09.
-
-## 5. Nivel estimado de experiencia tecnológica
-
-> **Por completar - asignado a: -------**
-> Estimar el nivel digital de cada grupo y justificarlo.
-> Conectarlo con decisiones del diseño: por qué el reporte son 3 pasos (RNF-01), por qué los controles miden 44×44 px, por qué se comprimen las imágenes a 300 KB (RNF-06).
-
-## 6. Necesidades de accesibilidad, seguridad y privacidad
-
-> **Por completar - asignado a: -------**
-> Qué necesita cada grupo y por qué aplica a este problema. Asociar cada una a su RNF.
-> Pistas: temor a represalias al denunciar un vertedero (RNF-04), conectividad intermitente en los cerros (RF-02, RNF-06), legibilidad para usuarios mayores (RNF-01).
-
-## 7. Roles considerados en el sistema
-
-> **Por completar - asignado a: -------**
-> Referenciar la tabla de permisos del [README](../README.md#roles-del-sistema) y explicar **por qué se separaron en dos roles** y qué ve uno que el otro no.
-
-## 8. Proto-personas
-
-> **Por completar - asignado a: -------**
-> Dos perfiles hipotéticos, uno por rol, con nombre ficticio y los **7 campos obligatorios**:
-> tipo de rol · características generales · necesidades principales · objetivos de uso · dificultades o frustraciones · funcionalidades que utilizaría · dispositivo y contexto de acceso.
-> Ninguno es opcional: el PDF los exige "como mínimo".
-
-### 8.1 [Nombre] - Vecina/o de cerro
-
-> **Por completar - asignado a: -------**
-> Los 7 campos. No presentarlo como usuario real.
-
-### 8.2 [Nombre] - Funcionario municipal
-
-> **Por completar - asignado a: -------**
-> Los 7 campos. No presentarlo como usuario real.
-
-## 9. Supuestos declarados
-
-> **Por completar - asignado a: -------**
-> Mínimo 3 supuestos usados para construir los perfiles. Cada uno debe ser **verificable**: en qué se apoya y cómo se comprobaría.
-> Ejemplo: *"se asume que la mayoría de los vecinos accede desde móvil y no desde computador"*.
-
-## 10. Fuentes consultadas
-
-> **Por completar - asignado a: -------**
-> Todas las fuentes citadas arriba, con formato consistente (autor, título, año, enlace).
-> Incluir las que respaldan el **incendio de 2015** y los **Desafíos CTD Litoral #11 y #30** ya mencionados en el README.
+**Creación de reportes.** La creación de reportes está restringida al rol Vecino. El rol Funcionario accede a los reportes en modo lectura y gestión, sin poder originarlos. Esta decisión preserva la separación de responsabilidades entre quien aporta la información territorial y quien decide sobre su atención.
