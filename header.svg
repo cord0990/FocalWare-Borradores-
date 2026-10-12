@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="FocalWare: priorización de limpieza por riesgo de incendio en las quebradas de Valparaíso">
+  <defs>
+    <clipPath id="marco"><rect width="1200" height="300" rx="14"/></clipPath>
+
+    <radialGradient id="fondo" cx="50%" cy="38%" r="60%">
+      <stop offset="0" stop-color="#2A1410"/>
+      <stop offset="1" stop-color="#0E1013"/>
+    </radialGradient>
+
+    <radialGradient id="aura">
+      <stop offset="0" stop-color="#F97316" stop-opacity="0.55"/>
+      <stop offset="0.45" stop-color="#E11D48" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#E11D48" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="llama" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFC24A"/>
+      <stop offset="0.45" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#E11D48"/>
+    </linearGradient>
+
+    <linearGradient id="titulo" gradientUnits="userSpaceOnUse" x1="400" y1="0" x2="800" y2="0">
+      <stop offset="0" stop-color="#FDBA74"/>
+      <stop offset="0.5" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#E11D48"/>
+    </linearGradient>
+  </defs>
+
+  <g clip-path="url(#marco)">
+    <rect width="1200" height="300" fill="url(#fondo)"/>
+
+    <!-- Aura que respira detrás de la llama -->
+    <circle cx="600" cy="100" r="110" fill="url(#aura)">
+      <animate attributeName="r" values="95;120;95" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Brasas que suben -->
+    <g fill="#FDBA74">
+      <circle cx="588" cy="140" r="1.8" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;-18 -120" dur="3.2s" begin="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="3.2s" begin="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="612" cy="138" r="1.4" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;22 -110" dur="2.8s" begin="2.1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="2.8s" begin="2.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="600" cy="142" r="1.2" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;6 -135" dur="3.6s" begin="2.7s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;0.9;0" dur="3.6s" begin="2.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="575" cy="135" r="1.3" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;-30 -95" dur="3s" begin="3.3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;0.8;0" dur="3s" begin="3.3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="624" cy="134" r="1.6" opacity="0">
+        <animateTransform attributeName="transform" type="translate" values="0 0;28 -100" dur="3.4s" begin="3.9s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="3.4s" begin="3.9s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- Llama con el foco (logo) -->
+    <g transform="translate(600,152)">
+      <g opacity="0">
+        <animate attributeName="opacity" from="0" to="1" dur="0.8s" begin="0.2s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="scale" values="1 1;1.03 0.97;0.98 1.03;1 1" dur="1.8s" repeatCount="indefinite"/>
+
+        <path fill="url(#llama)" d="M0,-114 C14,-92 38,-74 38,-42 C38,-16 21,0 0,0 C-21,0 -38,-16 -38,-42 C-38,-58 -28,-70 -22,-82 C-20,-68 -14,-60 -8,-58 C-10,-78 -6,-98 0,-114 Z"/>
+        <path fill="#FFC24A" fill-opacity="0.55" d="M6,-90 C14,-76 24,-64 22,-46 C20,-32 12,-26 4,-26 C10,-38 8,-52 2,-62 C2,-72 4,-82 6,-90 Z"/>
+
+        <!-- Foco -->
+        <circle cy="-34" r="16" fill="#F5F5F4"/>
+        <circle cy="-34" r="5.5" fill="#E11D48"/>
+        <path d="M21,-22 V-42" stroke="#F5F5F4" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="21" cy="-45" r="3.4" fill="#F5F5F4"/>
+      </g>
+
+      <!-- Pulso del foco -->
+      <g fill="none" stroke="#F97316" stroke-width="1.4">
+        <circle cy="-34" r="16" opacity="0">
+          <animate attributeName="r" values="16;80" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0" dur="3s" begin="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cy="-34" r="16" opacity="0">
+          <animate attributeName="r" values="16;80" dur="3s" begin="2.7s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0" dur="3s" begin="2.7s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </g>
+
+    <!-- Nombre y lema -->
+    <g font-family="'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif" text-anchor="middle">
+      <text x="600" y="210" font-size="54" font-weight="800" font-style="italic" letter-spacing="6" fill="url(#titulo)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" dur="0.9s" begin="0.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="translate" from="0 10" to="0 0" dur="0.9s" begin="0.6s" fill="freeze"/>
+        FOCALWARE
+      </text>
+      <text x="600" y="238" font-size="11" font-weight="600" letter-spacing="3" fill="#8A94A3" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" dur="1s" begin="1s" fill="freeze"/>
+        QUEBRADAS DE VALPARAÍSO · PRIORIZACIÓN POR RIESGO DE INCENDIO
+      </text>
+    </g>
+
+    <!-- Cerros de Valparaíso -->
+    <path fill="#FFFFFF" fill-opacity="0.025" d="M0,282 C60,270 110,262 170,272 C230,282 270,258 340,262 C410,266 440,284 510,280 C580,276 610,256 680,260 C750,264 790,282 860,278 C930,274 960,258 1030,264 C1090,270 1140,284 1200,276 V300 H0 Z"/>
+    <path pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="#5B6675" stroke-width="1.5"
+          d="M0,282 C60,270 110,262 170,272 C230,282 270,258 340,262 C410,266 440,284 510,280 C580,276 610,256 680,260 C750,264 790,282 860,278 C930,274 960,258 1030,264 C1090,270 1140,284 1200,276">
+      <animate attributeName="stroke-dashoffset" from="1" to="0" dur="2s" begin="0.8s" fill="freeze"/>
+    </path>
+
+    <!-- Reportes sobre los cerros -->
+    <g fill="#0E1013" stroke="#8A94A3" stroke-width="1.3">
+      <circle cx="340" cy="262" r="2.8" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.5s" fill="freeze"/></circle>
+      <circle cx="1030" cy="264" r="2.8" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="2.4s" fill="freeze"/></circle>
+    </g>
+    <g transform="translate(680,260)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="2s" fill="freeze"/>
+      <circle r="4" fill="none" stroke="#E11D48" stroke-width="1.2">
+        <animate attributeName="r" values="4;16" dur="2.4s" begin="2.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.7;0" dur="2.4s" begin="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="4" fill="#E11D48"/>
+    </g>
+  </g>
+</svg>
